@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="kyNomen-ejbPU" transaction-type="JTA">
+    <jta-data-source>jdbc/kynomics</jta-data-source>
+    <class>com.kynomics.daten.Adresstyp</class>
+    <class>com.kynomics.daten.Auftrag</class>
+    <class>com.kynomics.daten.Auftragposition</class>
+    <class>com.kynomics.daten.Auftragtyp</class>
+    <class>com.kynomics.daten.Ergebnis</class>
+    <class>com.kynomics.daten.Ergebnistyp</class>
+    <class>com.kynomics.daten.Halter</class>
+    <class>com.kynomics.daten.Halteradresse</class>
+    <class>com.kynomics.daten.Haltertyp</class>
+    <class>com.kynomics.daten.Milestone</class>
+    <class>com.kynomics.daten.Milestonetyp</class>
+    <class>com.kynomics.daten.Patient</class>
+    <class>com.kynomics.daten.Rasse</class>
+    <class>com.kynomics.daten.Spezies</class>
+    <class>com.kynomics.daten.Untersuchung</class>
+    <class>com.kynomics.daten.Untersuchungstyp</class>
+    <class>com.kynomics.daten.UntersuchungstypMilestone</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="javax.persistence.schema-generation.database.action" value="create"/>
+    </properties>
+  </persistence-unit>
+</persistence>
