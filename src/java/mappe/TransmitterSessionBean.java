@@ -6,7 +6,9 @@
 package mappe;
 //import com.daa.util.GConnection;
 
+import com.kynomics.daten.Adresstyp;
 import com.kynomics.daten.Halter;
+import com.kynomics.daten.Halteradresse;
 import com.kynomics.daten.Haltertyp;
 import com.kynomics.daten.Patient;
 import com.kynomics.daten.Rasse;
@@ -114,6 +116,14 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     }
 
     @Override
+    public List<Adresstyp> initializeAdressTypen() {
+        EntityManager em = emf.createEntityManager();
+        List<Adresstyp> list = em.createNamedQuery("Adresstyp.findAll").getResultList();
+        System.out.println("********* ListSize Adresstypen ****" + list.size());
+        return list;
+    }
+
+    @Override
     public List<Halter> halterGet() {
         EntityManager em = emf.createEntityManager();
         List<Halter> list = em.createNamedQuery("Halter.findAll").getResultList();
@@ -125,6 +135,11 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         EntityManager em = emf.createEntityManager();
         List<Patient> list = em.createNamedQuery("Patient.findAll").getResultList();
         return list;
+    }
+
+    @Override
+    public List<Halteradresse> halteradresseGet() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 } // end  class
 
