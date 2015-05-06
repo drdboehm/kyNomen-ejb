@@ -8,6 +8,7 @@ package mappe;
 
 import com.kynomics.daten.Adresstyp;
 import com.kynomics.daten.Halter;
+import com.kynomics.daten.HalterAdresssenPatientWrapper;
 import com.kynomics.daten.Halteradresse;
 import com.kynomics.daten.Haltertyp;
 import com.kynomics.daten.Patient;
@@ -34,11 +35,6 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-//    @Override
-//    public List<Gericht> initializeMenu() {
-//        EntityManager em = emf.createEntityManager();
-//        return em.createNamedQuery("Gericht.findAll").getResultList();
-//    }
     @PostConstruct
     public void init() {
     }
@@ -52,50 +48,11 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
 //        }
     }
 
-//    @Override
-//    public boolean storeEjb(BestellWrapper bw) {
-//        Bestellung bestellung = bw.getBestellung();
-//        bestellung.setOrderDate(new Date());
-//        Kunde kunde = bw.getKunde();
-//        List<Gericht> orderedGerichte = bw.getGerichte();
-//        /*
-//         Set timespamp fields - later distinguish if Kunde is present, then 
-//        leave firstEntryDate as is
-//         */
-//        kunde.setFirstEntryDate(new Date());
-//        kunde.setLastEntryDate(new Date());
-//        boolean success = true;
-//        EntityManager em = emf.createEntityManager();
-//
-//        em.persist(kunde);
-//        em.flush();
-//        // KundeId is set ! - bestellung takes Kunde-Object, not the integer ID only !
-//        bestellung.setKeyKunde(kunde);
-//        em.persist(bestellung);
-//        em.flush();
-//        Orderposition orderpositions;
-//        for (Gericht g : orderedGerichte) {
-//            orderpositions = new Orderposition();
-//            // set the Key 
-//            orderpositions.setKeyOrder(bestellung);
-//            orderpositions.setKeyGericht(g);
-//            orderpositions.setAmountPosition(g.getAmount());
-//            em.persist(orderpositions);
-//        }
-//        em.flush();
-//        return success;
-//
-//    } // end method
-    @Override
-    public boolean storeEjb() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
     public List<Haltertyp> initializeHalterTypen() {
         EntityManager em = emf.createEntityManager();
         List<Haltertyp> list = em.createNamedQuery("Haltertyp.findAll").getResultList();
-        System.out.println("********* ListSize Haltertyp*****" + list.size());
+//        System.out.println("********* ListSize Haltertyp*****" + list.size());
         return list;
     }
 
@@ -103,7 +60,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     public List<Spezies> initializeSpeziesTypen() {
         EntityManager em = emf.createEntityManager();
         List<Spezies> list = em.createNamedQuery("Spezies.findAll").getResultList();
-        System.out.println("********* ListSize *Spezies ****" + list.size());
+//        System.out.println("********* ListSize *Spezies ****" + list.size());
         return list;
     }
 
@@ -111,7 +68,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     public List<Rasse> initializeRasseTypen() {
         EntityManager em = emf.createEntityManager();
         List<Rasse> list = em.createNamedQuery("Rasse.findAll").getResultList();
-        System.out.println("********* ListSize Rassen ****" + list.size());
+//        System.out.println("********* ListSize Rassen ****" + list.size());
         return list;
     }
 
@@ -119,7 +76,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     public List<Adresstyp> initializeAdressTypen() {
         EntityManager em = emf.createEntityManager();
         List<Adresstyp> list = em.createNamedQuery("Adresstyp.findAll").getResultList();
-        System.out.println("********* ListSize Adresstypen ****" + list.size());
+//        System.out.println("********* ListSize Adresstypen ****" + list.size());
         return list;
     }
 
@@ -141,5 +98,15 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     public List<Halteradresse> halteradresseGet() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public boolean storeEjb(HalterAdresssenPatientWrapper hapw) {
+        Halter halter = hapw.getHalter();
+        boolean success = true;
+        EntityManager em = emf.createEntityManager();
+        em.persist(halter);
+        em.flush();
+        return success;
+    } // end method
 } // end  class
 
