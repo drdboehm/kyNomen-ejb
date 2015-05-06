@@ -14,6 +14,8 @@ import com.kynomics.daten.Haltertyp;
 import com.kynomics.daten.Patient;
 import com.kynomics.daten.Rasse;
 import com.kynomics.daten.Spezies;
+import com.kynomics.daten.finder.Haltertreffer;
+import com.kynomics.daten.finder.Suchkriterien;
 import com.kynomics.lib.TransmitterSessionBeanRemote;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -108,5 +110,14 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         em.flush();
         return success;
     } // end method
-} // end  class
+
+    @Override
+    public List<Haltertreffer> suchen(Suchkriterien kriterien) {
+        String abfrage = "SELECT NEW " + Haltertreffer.class.getName()
+                + "(h.halterId, h.halterName, h.halterBemerkung) FROM Halter h"
+                + kriterien;
+        EntityManager em = emf.createEntityManager();
+        return em.createQuery(abfrage).setMaxResults(101).getResultList();
+    }
+} // end  class  
 
