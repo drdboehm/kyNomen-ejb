@@ -8,7 +8,6 @@ package mappe;
 
 import com.kynomics.daten.Adresstyp;
 import com.kynomics.daten.Halter;
-import com.kynomics.daten.HalterAdresssenPatientWrapper;
 import com.kynomics.daten.Halteradresse;
 import com.kynomics.daten.Haltertyp;
 import com.kynomics.daten.Patient;
@@ -16,7 +15,9 @@ import com.kynomics.daten.Rasse;
 import com.kynomics.daten.Spezies;
 import com.kynomics.daten.finder.Haltertreffer;
 import com.kynomics.daten.finder.Suchkriterien;
+import com.kynomics.daten.wrapper.HalterAdresssenPatientWrapper;
 import com.kynomics.lib.TransmitterSessionBeanRemote;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -101,7 +102,6 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
     public boolean storeEjb(HalterAdresssenPatientWrapper hapw) {
         Halter halter = hapw.getHalter();
         boolean success = true;
@@ -112,12 +112,19 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     } // end method
 
     @Override
-    public List<Haltertreffer> suchen(Suchkriterien kriterien) {
+    public List<Haltertreffer> sucheHalter(Suchkriterien kriterien) {
         String abfrage = "SELECT NEW " + Haltertreffer.class.getName()
                 + "(h.halterId, h.halterName, h.halterBemerkung) FROM Halter h"
                 + kriterien;
         EntityManager em = emf.createEntityManager();
-        return em.createQuery(abfrage).setMaxResults(101).getResultList();
+        return em.createQuery(abfrage).setMaxResults(6).getResultList();
     }
+
+    @Override
+    public <T> T findById(Class<T> entityClass, Integer primaryKey) {
+        EntityManager em = emf.createEntityManager();
+        return em.find(entityClass, primaryKey);
+    }
+
 } // end  class  
 

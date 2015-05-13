@@ -789,6 +789,9 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.kyNomen-lib}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
+        <ant antfile="${project.kyNomen-lib_org}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
     </target>
     <target depends="init, -deps-module-jar, -deps-ear-jar" name="deps-jar"/>
     <target depends="init,deps-jar" name="-pre-pre-compile">
@@ -801,16 +804,20 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="compile,-library-inclusion-in-archive-weblogic,-library-inclusion-in-archive-by-user" name="library-inclusion-in-archive"/>
     <target if="is.jars.in.ejbjar" name="-library-inclusion-in-archive-by-user">
+        <copyfiles files="${reference.kyNomen-lib_org.jar}" todir="${build.classes.dir}"/>
         <copyfiles files="${reference.kyNomen-lib.jar}" todir="${build.classes.dir}"/>
     </target>
     <target if="is.server.weblogic" name="-library-inclusion-in-archive-weblogic">
+        <basename file="${reference.kyNomen-lib_org.jar}" property="manifest.reference.kyNomen-lib_org.jar"/>
         <basename file="${reference.kyNomen-lib.jar}" property="manifest.reference.kyNomen-lib.jar"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Extension-List" value="jar-1 "/>
-            <attribute name="jar-1-Extension-Name" value="${manifest.reference.kyNomen-lib.jar}"/>
+            <attribute name="Extension-List" value="jar-1 jar-2 "/>
+            <attribute name="jar-1-Extension-Name" value="${manifest.reference.kyNomen-lib_org.jar}"/>
+            <attribute name="jar-2-Extension-Name" value="${manifest.reference.kyNomen-lib.jar}"/>
         </manifest>
     </target>
     <target depends="compile" name="library-inclusion-in-manifest">
+        <copyfiles files="${reference.kyNomen-lib_org.jar}" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.kyNomen-lib.jar}" todir="${dist.ear.dir}/lib"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
