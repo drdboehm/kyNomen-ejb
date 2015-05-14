@@ -14,7 +14,9 @@ import com.kynomics.daten.Patient;
 import com.kynomics.daten.Rasse;
 import com.kynomics.daten.Spezies;
 import com.kynomics.daten.finder.Haltertreffer;
-import com.kynomics.daten.finder.Suchkriterien;
+import com.kynomics.daten.finder.Patiententreffer;
+import com.kynomics.daten.finder.SuchkriterienHalter;
+import com.kynomics.daten.finder.SuchkriterienPatient;
 import com.kynomics.daten.wrapper.HalterAdresssenPatientWrapper;
 import com.kynomics.lib.TransmitterSessionBeanRemote;
 import java.util.ArrayList;
@@ -102,20 +104,38 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
     public boolean storeEjb(HalterAdresssenPatientWrapper hapw) {
-        Halter halter = hapw.getHalter();
         boolean success = true;
         EntityManager em = emf.createEntityManager();
-        em.persist(halter);
+        if (hapw.getHalter() != null) {
+            Halter halter = hapw.getHalter();
+            em.persist(halter);
+        }
+        if (hapw.getPatient() != null) {
+            Patient patient = hapw.getPatient();
+            em.persist(patient);
+        }
         em.flush();
         return success;
     } // end method
 
     @Override
-    public List<Haltertreffer> sucheHalter(Suchkriterien kriterien) {
+    public List<Haltertreffer> sucheHalter(SuchkriterienHalter kriterien) {
         String abfrage = "SELECT NEW " + Haltertreffer.class.getName()
                 + "(h.halterId, h.halterName, h.halterBemerkung) FROM Halter h"
                 + kriterien;
+          System.out.println("Abfrage = " + abfrage);
+        EntityManager em = emf.createEntityManager();
+        return em.createQuery(abfrage).setMaxResults(6).getResultList();
+    }
+
+    @Override
+    public List<Patiententreffer> suchePatient(SuchkriterienPatient kriterien) {
+        String abfrage = "SELECT NEW " + Patiententreffer.class.getName()
+                + "(p.patientId) FROM Patient p"
+                + kriterien;
+                System.out.println("Abfrage = " + abfrage);
         EntityManager em = emf.createEntityManager();
         return em.createQuery(abfrage).setMaxResults(6).getResultList();
     }
