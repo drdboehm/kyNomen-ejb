@@ -13,9 +13,11 @@ import com.kynomics.daten.Haltertyp;
 import com.kynomics.daten.Patient;
 import com.kynomics.daten.Rasse;
 import com.kynomics.daten.Spezies;
+import com.kynomics.daten.finder.HalteradresseTreffer;
 import com.kynomics.daten.finder.Haltertreffer;
 import com.kynomics.daten.finder.Patiententreffer;
 import com.kynomics.daten.finder.SuchkriterienHalter;
+import com.kynomics.daten.finder.SuchkriterienHalteradresse;
 import com.kynomics.daten.finder.SuchkriterienPatient;
 import com.kynomics.daten.wrapper.HalterAdresssenPatientWrapper;
 import com.kynomics.lib.TransmitterSessionBeanRemote;
@@ -109,39 +111,54 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         boolean success = true;
         EntityManager em = emf.createEntityManager();
         if (hapw.getHalter() != null) {
-            Halter halter = hapw.getHalter();
-            em.persist(halter);
+            em.persist(hapw.getHalter());
         }
         if (hapw.getPatient() != null) {
-            Patient patient = hapw.getPatient();
-            em.persist(patient);
+            em.persist(hapw.getPatient());
+        }
+        if (hapw.getHalteradresse() != null) {
+            em.persist(hapw.getHalteradresse());
         }
         em.flush();
         return success;
     } // end method
 
     @Override
-    public List<Haltertreffer> sucheHalter(SuchkriterienHalter kriterien) {
+    public List<Haltertreffer> sucheHalter(SuchkriterienHalter kriterien
+    ) {
         String abfrage = "SELECT NEW " + Haltertreffer.class.getName()
                 + "(h.halterId, h.halterName, h.halterBemerkung) FROM Halter h"
                 + kriterien;
-          System.out.println("Abfrage = " + abfrage);
+        System.out.println("Abfrage = " + abfrage);
         EntityManager em = emf.createEntityManager();
         return em.createQuery(abfrage).setMaxResults(6).getResultList();
     }
 
     @Override
-    public List<Patiententreffer> suchePatient(SuchkriterienPatient kriterien) {
+    public List<Patiententreffer> suchePatient(SuchkriterienPatient kriterien
+    ) {
         String abfrage = "SELECT NEW " + Patiententreffer.class.getName()
                 + "(p.patientId) FROM Patient p"
                 + kriterien;
-                System.out.println("Abfrage = " + abfrage);
+        System.out.println("Abfrage = " + abfrage);
         EntityManager em = emf.createEntityManager();
         return em.createQuery(abfrage).setMaxResults(6).getResultList();
     }
 
     @Override
-    public <T> T findById(Class<T> entityClass, Integer primaryKey) {
+    public List<HalteradresseTreffer> sucheHalterAdresse(SuchkriterienHalteradresse kriterien) {
+        String abfrage = "SELECT NEW " + HalteradresseTreffer.class.getName()
+                + "(ha.halteradresseId) FROM Halteradresse ha"
+                + kriterien;
+        System.out.println("Abfrage = " + abfrage);
+        EntityManager em = emf.createEntityManager();
+        return em.createQuery(abfrage).setMaxResults(6).getResultList();
+    }
+
+    @Override
+    public <T> T
+            findById(Class< T> entityClass, Integer primaryKey
+            ) {
         EntityManager em = emf.createEntityManager();
         return em.find(entityClass, primaryKey);
     }
