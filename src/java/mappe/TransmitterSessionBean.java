@@ -131,7 +131,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
                 + kriterien;
         System.out.println("Abfrage = " + abfrage);
         EntityManager em = emf.createEntityManager();
-        return em.createQuery(abfrage).setMaxResults(6).getResultList();
+        return em.createQuery(abfrage).getResultList();
     }
 
     @Override
@@ -142,7 +142,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
                 + kriterien;
         System.out.println("Abfrage = " + abfrage);
         EntityManager em = emf.createEntityManager();
-        return em.createQuery(abfrage).setMaxResults(6).getResultList();
+        return em.createQuery(abfrage).getResultList();
     }
 
     @Override
@@ -152,7 +152,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
                 + kriterien;
         System.out.println("Abfrage = " + abfrage);
         EntityManager em = emf.createEntityManager();
-        return em.createQuery(abfrage).setMaxResults(6).getResultList();
+        return em.createQuery(abfrage).getResultList();
     }
 
     @Override
