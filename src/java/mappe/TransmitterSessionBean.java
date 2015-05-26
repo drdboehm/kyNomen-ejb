@@ -10,6 +10,7 @@ import com.kynomics.daten.Adresstyp;
 import com.kynomics.daten.Halter;
 import com.kynomics.daten.Halteradresse;
 import com.kynomics.daten.Haltertyp;
+import com.kynomics.daten.Milestonetyp;
 import com.kynomics.daten.Patient;
 import com.kynomics.daten.Rasse;
 import com.kynomics.daten.Spezies;
@@ -92,6 +93,13 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     public List<Untersuchungstyp> initializeUntersuchungstypen() {
         EntityManager em = emf.createEntityManager();
         List<Untersuchungstyp> list = em.createNamedQuery("Untersuchungstyp.findAll").getResultList();
+        return list;
+    }
+
+    @Override
+    public List<Milestonetyp> initializeMilestoneTypen() {
+        EntityManager em = emf.createEntityManager();
+        List<Milestonetyp> list = em.createNamedQuery("Milestonetyp.findAll").getResultList();
         return list;
     }
 
