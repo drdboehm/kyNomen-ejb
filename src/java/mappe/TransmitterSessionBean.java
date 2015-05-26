@@ -163,5 +163,14 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         return em.find(entityClass, primaryKey);
     }
 
+    @Override
+    public <T> T deleteById(Class<T> entityClass, Integer primaryKey) {
+        EntityManager em = emf.createEntityManager();
+        T t = em.find(entityClass, primaryKey);
+        em.remove(t);
+        em.flush();
+        return t;
+    }
+
 } // end  class  
 
