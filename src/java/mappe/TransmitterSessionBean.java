@@ -13,6 +13,7 @@ import com.kynomics.daten.Haltertyp;
 import com.kynomics.daten.Patient;
 import com.kynomics.daten.Rasse;
 import com.kynomics.daten.Spezies;
+import com.kynomics.daten.Untersuchungstyp;
 import com.kynomics.daten.finder.HalteradresseTreffer;
 import com.kynomics.daten.finder.Haltertreffer;
 import com.kynomics.daten.finder.Patiententreffer;
@@ -84,6 +85,13 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         EntityManager em = emf.createEntityManager();
         List<Adresstyp> list = em.createNamedQuery("Adresstyp.findAll").getResultList();
 //        System.out.println("********* ListSize Adresstypen ****" + list.size());
+        return list;
+    }
+
+    @Override
+    public List<Untersuchungstyp> initializeUntersuchungstypen() {
+        EntityManager em = emf.createEntityManager();
+        List<Untersuchungstyp> list = em.createNamedQuery("Untersuchungstyp.findAll").getResultList();
         return list;
     }
 
