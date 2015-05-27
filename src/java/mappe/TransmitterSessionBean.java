@@ -22,6 +22,7 @@ import com.kynomics.daten.finder.SuchkriterienHalter;
 import com.kynomics.daten.finder.SuchkriterienHalteradresse;
 import com.kynomics.daten.finder.SuchkriterienPatient;
 import com.kynomics.daten.wrapper.HalterAdresssenPatientWrapper;
+import com.kynomics.daten.wrapper.UTypMileStoneWrapper;
 import com.kynomics.lib.TransmitterSessionBeanRemote;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,20 +125,44 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
 
     @Override
     public boolean storeEjb(HalterAdresssenPatientWrapper hapw) {
-        boolean success = true;
+        boolean success = false;
         EntityManager em = emf.createEntityManager();
         if (hapw.getHalter() != null) {
             em.persist(hapw.getHalter());
+            em.flush();
+            success = true;
         }
         if (hapw.getPatient() != null) {
             em.persist(hapw.getPatient());
+            em.flush();
+            success = true;
         }
         if (hapw.getHalteradresse() != null) {
             em.persist(hapw.getHalteradresse());
+            em.flush();
+            success = true;
         }
-        em.flush();
+//        em.flush();
         return success;
     } // end method
+
+    @Override
+    public boolean storeEjb(UTypMileStoneWrapper wrapper) {
+        boolean success = false;
+        EntityManager em = emf.createEntityManager();
+        if (wrapper.getuTyp() != null) {
+            em.persist(wrapper.getuTyp());
+            em.flush();
+            success = true;
+        }
+        if (wrapper.getuTypMilestone() != null) {
+            em.persist(wrapper.getuTypMilestone());
+            em.flush();
+            success = true;
+        }
+//         em.flush();
+        return success;
+    }
 
     @Override
     public List<Haltertreffer> sucheHalter(SuchkriterienHalter kriterien
