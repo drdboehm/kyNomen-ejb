@@ -10,6 +10,7 @@ import com.kynomics.daten.Adresstyp;
 import com.kynomics.daten.Halter;
 import com.kynomics.daten.Halteradresse;
 import com.kynomics.daten.Haltertyp;
+import com.kynomics.daten.Milestone;
 import com.kynomics.daten.Milestonetyp;
 import com.kynomics.daten.Patient;
 import com.kynomics.daten.Rasse;
@@ -103,6 +104,13 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         List<Milestonetyp> list = em.createNamedQuery("Milestonetyp.findAll").getResultList();
         return list;
     }
+    
+    
+    @Override
+    public List<Milestone> initializeAllMilestones() {
+        EntityManager em = emf.createEntityManager();
+        return em.createNamedQuery("Milestone.findAll").getResultList();
+    }
 
     @Override
     public List<Halter> halterGet() {
@@ -146,18 +154,25 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         return success;
     } // end method
 
+    /**
+     *
+     * @param wrapper
+     * @return
+     */
     @Override
     public boolean storeEjb(UTypMileStoneWrapper wrapper) {
         boolean success = false;
         EntityManager em = emf.createEntityManager();
         if (wrapper.getuTyp() != null) {
-            em.persist(wrapper.getuTyp());
-            em.flush();
+            System.out.println("this UType is changed : " + wrapper.getuTyp() );
+            em.merge(wrapper.getuTyp());
+//            em.flush();
             success = true;
         }
-        if (wrapper.getuTypMilestone() != null) {
-            em.persist(wrapper.getuTypMilestone());
-            em.flush();
+        if (wrapper.getMilestone() != null) {
+//            em.persist(wrapper.getuTypMilestone());
+            em.merge(wrapper.getMilestone());
+//            em.flush();
             success = true;
         }
 //         em.flush();
@@ -212,6 +227,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         em.flush();
         return t;
     }
+
 
 } // end  class  
 
