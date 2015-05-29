@@ -18,14 +18,17 @@ import com.kynomics.daten.Spezies;
 import com.kynomics.daten.Untersuchungstyp;
 import com.kynomics.daten.finder.HalteradresseTreffer;
 import com.kynomics.daten.finder.Haltertreffer;
+import com.kynomics.daten.finder.MilestoneTreffer;
 import com.kynomics.daten.finder.Patiententreffer;
 import com.kynomics.daten.finder.SuchkriterienHalter;
 import com.kynomics.daten.finder.SuchkriterienHalteradresse;
+import com.kynomics.daten.finder.SuchkriterienMilestone;
 import com.kynomics.daten.finder.SuchkriterienPatient;
+import com.kynomics.daten.finder.SuchkriterienUTyp;
+import com.kynomics.daten.finder.UTypTreffer;
 import com.kynomics.daten.wrapper.HalterAdresssenPatientWrapper;
 import com.kynomics.daten.wrapper.UTypMileStoneWrapper;
 import com.kynomics.lib.TransmitterSessionBeanRemote;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -104,8 +107,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         List<Milestonetyp> list = em.createNamedQuery("Milestonetyp.findAll").getResultList();
         return list;
     }
-    
-    
+
     @Override
     public List<Milestone> initializeAllMilestones() {
         EntityManager em = emf.createEntityManager();
@@ -164,7 +166,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         boolean success = false;
         EntityManager em = emf.createEntityManager();
         if (wrapper.getuTyp() != null) {
-            System.out.println("this UType is changed : " + wrapper.getuTyp() );
+            System.out.println("this UType is changed : " + wrapper.getuTyp());
             em.merge(wrapper.getuTyp());
 //            em.flush();
             success = true;
@@ -212,6 +214,26 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     }
 
     @Override
+    public List<UTypTreffer> sucheUntersuchungstyp(SuchkriterienUTyp suchKr) {
+        String abfrage = "SELECT NEW " + UTypTreffer.class.getName()
+                + "(ut.untersuchungtypId) FROM Untersuchungstyp ut"
+                + suchKr;
+        System.out.println("Abfrage = " + abfrage);
+        EntityManager em = emf.createEntityManager();
+        return em.createQuery(abfrage).getResultList();
+    }
+
+    @Override
+    public List<MilestoneTreffer> sucheMilestone(SuchkriterienMilestone suchKr) {
+        String abfrage = "SELECT NEW " + MilestoneTreffer.class.getName()
+                + "(ms.milestoneId) FROM Milestone ms"
+                + suchKr;
+        System.out.println("Abfrage = " + abfrage);
+        EntityManager em = emf.createEntityManager();
+        return em.createQuery(abfrage).getResultList();
+    }
+
+    @Override
     public <T> T
             findById(Class< T> entityClass, Integer primaryKey
             ) {
@@ -227,7 +249,6 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         em.flush();
         return t;
     }
-
 
 } // end  class  
 
