@@ -38,8 +38,16 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
 /**
- *
- * @author teilnehmer
+ * The TransmitterSessionBean class implements the {@link TransmitterSessionBeanRemote}
+ * remote interface for giving access to the database through JPA.
+ * <p>
+ * </p>
+ * 
+ * @see TransmitterSessionBeanRemote
+ * 
+ * @since 0.2
+ * 
+ * @author drdboehm
  */
 @Stateless
 public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
@@ -138,18 +146,18 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         boolean success = false;
         EntityManager em = emf.createEntityManager();
         if (hapw.getHalter() != null) {
-            em.persist(hapw.getHalter());
-            em.flush();
+            em.merge(hapw.getHalter());
+//            em.flush();
             success = true;
         }
         if (hapw.getPatient() != null) {
-            em.persist(hapw.getPatient());
-            em.flush();
+            em.merge(hapw.getPatient());
+//            em.flush();
             success = true;
         }
         if (hapw.getHalteradresse() != null) {
-            em.persist(hapw.getHalteradresse());
-            em.flush();
+            em.merge(hapw.getHalteradresse());
+//            em.flush();
             success = true;
         }
 //        em.flush();

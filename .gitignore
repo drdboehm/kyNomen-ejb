@@ -1,2 +1,6 @@
 /build/
 /dist/
+/nbproject/private/
+/mavenproject1/mavenproject1-widgetset/target/
+/mavenproject1/mavenproject1-ui/target/
+/mavenproject1/mavenproject1-production/target/
