@@ -27,6 +27,7 @@ import com.kynomics.daten.finder.SuchkriterienPatient;
 import com.kynomics.daten.finder.SuchkriterienUTyp;
 import com.kynomics.daten.finder.UTypTreffer;
 import com.kynomics.daten.wrapper.HalterAdresssenPatientWrapper;
+import com.kynomics.daten.wrapper.SpeziesRasseWrapper;
 import com.kynomics.daten.wrapper.UTypMileStoneWrapper;
 import com.kynomics.lib.TransmitterSessionBeanRemote;
 import java.util.List;
@@ -38,15 +39,16 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
 /**
- * The TransmitterSessionBean class implements the {@link TransmitterSessionBeanRemote}
- * remote interface for giving access to the database through JPA.
+ * The TransmitterSessionBean class implements the
+ * {@link TransmitterSessionBeanRemote} remote interface for giving access to
+ * the database through JPA.
  * <p>
  * </p>
- * 
+ *
  * @see TransmitterSessionBeanRemote
- * 
+ *
  * @since 0.2
- * 
+ *
  * @author drdboehm
  */
 @Stateless
@@ -190,55 +192,90 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     }
 
     @Override
+    public boolean storeEjb(SpeziesRasseWrapper wrapper) {
+        boolean success = false;
+        EntityManager em = emf.createEntityManager();
+        Rasse r = wrapper.getRasse();
+        Spezies s = wrapper.getSpezies();
+        System.out.println("Rasse " + r);
+        System.out.println("Rasse " + s);
+        Spezies merge = em.merge(s);
+        r.setSpeziesSpeziesId(merge);
+        em.merge(r);
+        success = true;
+        return success;
+    }
+
+    @Override
     public List<Haltertreffer> sucheHalter(SuchkriterienHalter kriterien
     ) {
-        String abfrage = "SELECT NEW " + Haltertreffer.class.getName()
+        String abfrage = "SELECT NEW " + Haltertreffer.class
+                .getName()
                 + "(h.halterId, h.halterName, h.halterBemerkung) FROM Halter h"
                 + kriterien;
-        System.out.println("Abfrage = " + abfrage);
+        System.out.println(
+                "Abfrage = " + abfrage);
         EntityManager em = emf.createEntityManager();
-        return em.createQuery(abfrage).getResultList();
+
+        return em.createQuery(abfrage)
+                .getResultList();
     }
 
     @Override
     public List<Patiententreffer> suchePatient(SuchkriterienPatient kriterien
     ) {
-        String abfrage = "SELECT NEW " + Patiententreffer.class.getName()
+        String abfrage = "SELECT NEW " + Patiententreffer.class
+                .getName()
                 + "(p.patientId) FROM Patient p"
                 + kriterien;
-        System.out.println("Abfrage = " + abfrage);
+        System.out.println(
+                "Abfrage = " + abfrage);
         EntityManager em = emf.createEntityManager();
-        return em.createQuery(abfrage).getResultList();
+
+        return em.createQuery(abfrage)
+                .getResultList();
     }
 
     @Override
     public List<HalteradresseTreffer> sucheHalterAdresse(SuchkriterienHalteradresse kriterien) {
-        String abfrage = "SELECT NEW " + HalteradresseTreffer.class.getName()
+        String abfrage = "SELECT NEW " + HalteradresseTreffer.class
+                .getName()
                 + "(ha.halteradresseId) FROM Halteradresse ha"
                 + kriterien;
-        System.out.println("Abfrage = " + abfrage);
+        System.out.println(
+                "Abfrage = " + abfrage);
         EntityManager em = emf.createEntityManager();
-        return em.createQuery(abfrage).getResultList();
+
+        return em.createQuery(abfrage)
+                .getResultList();
     }
 
     @Override
     public List<UTypTreffer> sucheUntersuchungstyp(SuchkriterienUTyp suchKr) {
-        String abfrage = "SELECT NEW " + UTypTreffer.class.getName()
+        String abfrage = "SELECT NEW " + UTypTreffer.class
+                .getName()
                 + "(ut.untersuchungtypId) FROM Untersuchungstyp ut"
                 + suchKr;
-        System.out.println("Abfrage = " + abfrage);
+        System.out.println(
+                "Abfrage = " + abfrage);
         EntityManager em = emf.createEntityManager();
-        return em.createQuery(abfrage).getResultList();
+
+        return em.createQuery(abfrage)
+                .getResultList();
     }
 
     @Override
     public List<MilestoneTreffer> sucheMilestone(SuchkriterienMilestone suchKr) {
-        String abfrage = "SELECT NEW " + MilestoneTreffer.class.getName()
+        String abfrage = "SELECT NEW " + MilestoneTreffer.class
+                .getName()
                 + "(ms.milestoneId) FROM Milestone ms"
                 + suchKr;
-        System.out.println("Abfrage = " + abfrage);
+        System.out.println(
+                "Abfrage = " + abfrage);
         EntityManager em = emf.createEntityManager();
-        return em.createQuery(abfrage).getResultList();
+
+        return em.createQuery(abfrage)
+                .getResultList();
     }
 
     @Override
