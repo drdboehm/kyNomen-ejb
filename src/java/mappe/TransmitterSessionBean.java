@@ -7,6 +7,7 @@ package mappe;
 //import com.daa.util.GConnection;
 
 import com.kynomics.daten.Adresstyp;
+import com.kynomics.daten.Auftragtyp;
 import com.kynomics.daten.Halter;
 import com.kynomics.daten.Halteradresse;
 import com.kynomics.daten.Haltertyp;
@@ -15,7 +16,9 @@ import com.kynomics.daten.Milestonetyp;
 import com.kynomics.daten.Patient;
 import com.kynomics.daten.Rasse;
 import com.kynomics.daten.Spezies;
+import com.kynomics.daten.Untersuchung;
 import com.kynomics.daten.Untersuchungstyp;
+import com.kynomics.daten.UntersuchungstypMilestone;
 import com.kynomics.daten.finder.HalteradresseTreffer;
 import com.kynomics.daten.finder.Haltertreffer;
 import com.kynomics.daten.finder.MilestoneTreffer;
@@ -25,10 +28,13 @@ import com.kynomics.daten.finder.SuchkriterienHalteradresse;
 import com.kynomics.daten.finder.SuchkriterienMilestone;
 import com.kynomics.daten.finder.SuchkriterienPatient;
 import com.kynomics.daten.finder.SuchkriterienUTyp;
+import com.kynomics.daten.finder.SuchkriterienUntersuchung;
 import com.kynomics.daten.finder.UTypTreffer;
+import com.kynomics.daten.finder.Untersuchungtreffer;
 import com.kynomics.daten.wrapper.HalterAdresssenPatientWrapper;
 import com.kynomics.daten.wrapper.SpeziesRasseWrapper;
 import com.kynomics.daten.wrapper.UTypMileStoneWrapper;
+import com.kynomics.daten.wrapper.UntersuchungWrapper;
 import com.kynomics.lib.TransmitterSessionBeanRemote;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -119,9 +125,15 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     }
 
     @Override
-    public List<Milestone> initializeAllMilestones() {
+    public List<Milestone> initializeMilestones() {
         EntityManager em = emf.createEntityManager();
         return em.createNamedQuery("Milestone.findAll").getResultList();
+    }
+
+    @Override
+    public List<Auftragtyp> initializeAuftragtypen() {
+        EntityManager em = emf.createEntityManager();
+        return em.createNamedQuery("Auftragtyp.findAll").getResultList();
     }
 
     @Override
@@ -192,6 +204,17 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     }
 
     @Override
+    public boolean storeEjb(UntersuchungstypMilestone uTypMS) {
+        boolean success = false;
+        EntityManager em = emf.createEntityManager();
+        if (uTypMS != null) {
+            em.merge(uTypMS);
+            success = true;
+        }
+        return success;
+    }
+
+    @Override
     public boolean storeEjb(SpeziesRasseWrapper wrapper) {
         boolean success = false;
         EntityManager em = emf.createEntityManager();
@@ -202,6 +225,17 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         Spezies merge = em.merge(s);
         r.setSpeziesSpeziesId(merge);
         em.merge(r);
+        success = true;
+        return success;
+    }
+
+    @Override
+    public boolean storeEjb(UntersuchungWrapper wrapper) {
+        boolean success = false;
+        EntityManager em = emf.createEntityManager();
+        Untersuchung u = wrapper.getUntersuchung();
+        System.out.println("Untersuchung " + u);
+        Untersuchung merge = em.merge(u);
         success = true;
         return success;
     }
@@ -269,6 +303,20 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         String abfrage = "SELECT NEW " + MilestoneTreffer.class
                 .getName()
                 + "(ms.milestoneId) FROM Milestone ms"
+                + suchKr;
+        System.out.println(
+                "Abfrage = " + abfrage);
+        EntityManager em = emf.createEntityManager();
+
+        return em.createQuery(abfrage)
+                .getResultList();
+    }
+
+    @Override
+    public List<Untersuchungtreffer> sucheUntersuchung(SuchkriterienUntersuchung suchKr) {
+        String abfrage = "SELECT NEW " + Untersuchungtreffer.class
+                .getName()
+                + "(u.untersuchungId) FROM Untersuchung u"
                 + suchKr;
         System.out.println(
                 "Abfrage = " + abfrage);
