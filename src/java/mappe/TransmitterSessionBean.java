@@ -19,10 +19,12 @@ import com.kynomics.daten.Spezies;
 import com.kynomics.daten.Untersuchung;
 import com.kynomics.daten.Untersuchungstyp;
 import com.kynomics.daten.UntersuchungstypMilestone;
+import com.kynomics.daten.finder.Auftragtreffer;
 import com.kynomics.daten.finder.HalteradresseTreffer;
 import com.kynomics.daten.finder.Haltertreffer;
 import com.kynomics.daten.finder.MilestoneTreffer;
 import com.kynomics.daten.finder.Patiententreffer;
+import com.kynomics.daten.finder.SuchkriterienAuftrag;
 import com.kynomics.daten.finder.SuchkriterienHalter;
 import com.kynomics.daten.finder.SuchkriterienHalteradresse;
 import com.kynomics.daten.finder.SuchkriterienMilestone;
@@ -31,6 +33,7 @@ import com.kynomics.daten.finder.SuchkriterienUTyp;
 import com.kynomics.daten.finder.SuchkriterienUntersuchung;
 import com.kynomics.daten.finder.UTypTreffer;
 import com.kynomics.daten.finder.Untersuchungtreffer;
+import com.kynomics.daten.wrapper.AuftragAuftragPositionenWrapper;
 import com.kynomics.daten.wrapper.HalterAdresssenPatientWrapper;
 import com.kynomics.daten.wrapper.SpeziesRasseWrapper;
 import com.kynomics.daten.wrapper.UTypMileStoneWrapper;
@@ -174,7 +177,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
 //            em.flush();
             success = true;
         }
-//        em.flush();
+        em.flush();
         return success;
     } // end method
 
@@ -221,7 +224,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         Rasse r = wrapper.getRasse();
         Spezies s = wrapper.getSpezies();
         System.out.println("Rasse " + r);
-        System.out.println("Rasse " + s);
+        System.out.println("Spezies " + s);
         Spezies merge = em.merge(s);
         r.setSpeziesSpeziesId(merge);
         em.merge(r);
@@ -241,11 +244,33 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
     }
 
     @Override
+    public boolean storeEjb(AuftragAuftragPositionenWrapper wrapper) {
+        boolean success = false;
+        EntityManager em = emf.createEntityManager();
+        if (wrapper.getAuftrag() != null) {
+            System.out.println("this Auftrag is changed : " + wrapper.getAuftrag());
+            em.merge(wrapper.getAuftrag());
+//            em.flush();
+            success = true;
+        }
+        if (wrapper.getAuftragposition() != null) {
+//            em.persist(wrapper.getuTypMilestone());
+            em.merge(wrapper.getAuftragposition());
+//            em.flush();
+            success = true;
+        }
+//         em.flush();
+        return success;
+
+    }
+
+    @Override
     public List<Haltertreffer> sucheHalter(SuchkriterienHalter kriterien
     ) {
         String abfrage = "SELECT NEW " + Haltertreffer.class
                 .getName()
-                + "(h.halterId, h.halterName, h.halterBemerkung) FROM Halter h"
+                + "(h.halterId) FROM Halter h"
+                + " INNER JOIN h.haltertypId t "
                 + kriterien;
         System.out.println(
                 "Abfrage = " + abfrage);
@@ -275,6 +300,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         String abfrage = "SELECT NEW " + HalteradresseTreffer.class
                 .getName()
                 + "(ha.halteradresseId) FROM Halteradresse ha"
+                + " INNER JOIN ha.adresstypId t "
                 + kriterien;
         System.out.println(
                 "Abfrage = " + abfrage);
@@ -317,6 +343,20 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
         String abfrage = "SELECT NEW " + Untersuchungtreffer.class
                 .getName()
                 + "(u.untersuchungId) FROM Untersuchung u"
+                + suchKr;
+        System.out.println(
+                "Abfrage = " + abfrage);
+        EntityManager em = emf.createEntityManager();
+
+        return em.createQuery(abfrage)
+                .getResultList();
+    }
+
+    @Override
+    public List<Auftragtreffer> sucheAuftrag(SuchkriterienAuftrag suchKr) {
+        String abfrage = "SELECT NEW " + Auftragtreffer.class
+                .getName()
+                + "(a.auftragId) FROM Auftrag a"
                 + suchKr;
         System.out.println(
                 "Abfrage = " + abfrage);
