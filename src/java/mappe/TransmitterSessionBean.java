@@ -19,12 +19,14 @@ import com.kynomics.daten.Spezies;
 import com.kynomics.daten.Untersuchung;
 import com.kynomics.daten.Untersuchungstyp;
 import com.kynomics.daten.UntersuchungstypMilestone;
+import com.kynomics.daten.finder.AuftragpositionTreffer;
 import com.kynomics.daten.finder.Auftragtreffer;
 import com.kynomics.daten.finder.HalteradresseTreffer;
 import com.kynomics.daten.finder.Haltertreffer;
 import com.kynomics.daten.finder.MilestoneTreffer;
 import com.kynomics.daten.finder.Patiententreffer;
 import com.kynomics.daten.finder.SuchkriterienAuftrag;
+import com.kynomics.daten.finder.SuchkriterienAuftragposition;
 import com.kynomics.daten.finder.SuchkriterienHalter;
 import com.kynomics.daten.finder.SuchkriterienHalteradresse;
 import com.kynomics.daten.finder.SuchkriterienMilestone;
@@ -253,12 +255,11 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
 //            em.flush();
             success = true;
         }
-        if (wrapper.getAuftragposition() != null) {
-//            em.persist(wrapper.getuTypMilestone());
-            em.merge(wrapper.getAuftragposition());
-//            em.flush();
-            success = true;
-        }
+//        if (wrapper.getAuftragpositionenList()!= null) {
+//            em.merge(wrapper.getAuftragpositionenList());
+////            em.flush();
+//            success = true;
+//        }
 //         em.flush();
         return success;
 
@@ -340,8 +341,7 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
 
     @Override
     public List<Untersuchungtreffer> sucheUntersuchung(SuchkriterienUntersuchung suchKr) {
-        String abfrage = "SELECT NEW " + Untersuchungtreffer.class
-                .getName()
+        String abfrage = "SELECT NEW " + Untersuchungtreffer.class.getName()
                 + "(u.untersuchungId) FROM Untersuchung u"
                 + suchKr;
         System.out.println(
@@ -350,6 +350,21 @@ public class TransmitterSessionBean implements TransmitterSessionBeanRemote {
 
         return em.createQuery(abfrage)
                 .getResultList();
+    }
+
+    @Override
+    public List<AuftragpositionTreffer> sucheAuftragposition(SuchkriterienAuftragposition suchKr) {
+        String abfrage = "SELECT NEW " + AuftragpositionTreffer.class
+                .getName()
+                + "(ap.auftragpositionId) FROM Auftragposition ap"
+                + suchKr;
+        System.out.println(
+                "Abfrage = " + abfrage);
+        EntityManager em = emf.createEntityManager();
+
+        return em.createQuery(abfrage)
+                .getResultList();
+
     }
 
     @Override
